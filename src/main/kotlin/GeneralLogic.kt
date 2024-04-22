@@ -1,33 +1,6 @@
 import java.util.Scanner
 import kotlin.system.exitProcess
 
-enum class Menu {
-    ArchiveSelection,
-    NoteSelection,
-    NoteScreen,
-    CreateArchive,
-    CreateNote
-}
-
-data class Archive(val name: String, val noteList: MutableList<Note> = mutableListOf())
-
-data class Note(val name: String, var content: String = "")
-
-var menu: Menu = Menu.ArchiveSelection
-
-var archiveItem: Int? = null
-var noteItem: Int? = null
-
-
-fun <T> printList(list: MutableList<T>): String {
-    var print = ""
-    if (list.isNotEmpty()) {
-        for ((index, element) in list.withIndex()) {
-            print += "${index + 1}. ${element}\n"
-        }
-    }
-    return print
-}
 
 fun printScreen() {
     when (menu) {
@@ -40,7 +13,6 @@ fun printScreen() {
         )
 
         Menu.CreateArchive -> println("\nВведите название массива:")
-
         Menu.NoteSelection -> println(
             "\nВведите номер пункта: \n0. Создать новую заметку \n${
                 printList(
@@ -50,7 +22,6 @@ fun printScreen() {
         )
 
         Menu.CreateNote -> println("\nВведите название заметки и её содержание через Enter:")
-
         Menu.NoteScreen -> println(
             "\nЗаметка: ${archiveList[archiveItem!!].noteList[noteItem!!].name} \nСодержание: " +
                     "${archiveList[archiveItem!!].noteList[noteItem!!].content} \nВведите номер пункта: \n1. Изменить содержание \n2. Выход"
@@ -58,18 +29,6 @@ fun printScreen() {
     }
 }
 
-
-fun scannerException(): Int {
-    while (true) {
-        try {
-            return Scanner(System.`in`).nextLine().toInt()
-        } catch (e: NumberFormatException) {
-            println("\nНеобходимо ввести число из представленных пунктов меню\n")
-            printScreen()
-            continue
-        }
-    }
-}
 
 fun commandScanner() {
     printScreen()
@@ -90,7 +49,7 @@ fun commandScanner() {
 
                     archiveList.size + 1 -> exitProcess(0)
                     else -> {
-                        println("\nВыбранный номер пункта меню отсутствует\n")
+                        println("\nВыбранный номер пункта меню отсутствует")
                         printScreen()
                     }
                 }
@@ -127,7 +86,7 @@ fun commandScanner() {
                     }
 
                     else -> {
-                        println("\nВыбранный номер пункта меню отсутствует\n")
+                        println("\nВыбранный номер пункта меню отсутствует")
                         printScreen()
                     }
                 }
@@ -151,7 +110,7 @@ fun commandScanner() {
                 when (scannerException()) {
                     1 -> {
                         while (true) {
-                            println("\nВведите новое содержание заметки\n")
+                            println("\nВведите новое содержание заметки")
                             val content = Scanner(System.`in`).nextLine()
                             if (content != "") {
                                 archiveList[archiveItem!!].noteList[noteItem!!].content = content
@@ -168,7 +127,7 @@ fun commandScanner() {
                     }
 
                     else -> {
-                        println("\nВыбранный номер пункта меню отсутствует\n")
+                        println("\nВыбранный номер пункта меню отсутствует")
                         printScreen()
                     }
                 }
@@ -181,12 +140,12 @@ fun create(name: String, content: String = "") {
 
     if (menu == Menu.CreateArchive) {
         archiveList.add(Archive(name))
-        println("\nАрхив $name успешно создан\n")
+        println("\nАрхив $name успешно создан")
         menu = Menu.ArchiveSelection
         printScreen()
     } else {
         archiveList[archiveItem!!].noteList.add(Note(name, content))
-        println("\nЗаметка $name в архиве ${archiveList[archiveItem!!].name} успешно создана\n")
+        println("\nЗаметка $name в архиве ${archiveList[archiveItem!!].name} успешно создана")
         menu = Menu.NoteSelection
         printScreen()
     }
